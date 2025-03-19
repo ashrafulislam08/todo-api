@@ -39,7 +39,18 @@ router.post("/", async (req, res) => {
 router.post("/all", async (req, res) => {});
 
 // put todo
-router.put("/:id", async (req, res) => {});
+router.put("/:id", async (req, res) => {
+  const id = req.params.id;
+  const updatedTodo = req.body;
+  await Todo.findByIdAndUpdate(
+    { _id: req.params.id },
+    {
+      $set: updatedTodo,
+    }
+  );
+
+  res.send(updatedTodo);
+});
 // delete todo
 router.delete("/:id", async (req, res) => {});
 
