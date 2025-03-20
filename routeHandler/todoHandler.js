@@ -27,7 +27,6 @@ router.post("/", async (req, res) => {
   newTodo
     .save()
     .then((result) => {
-      console.log(result);
       res.status(201).send(req.body);
     })
     .catch((error) => {
@@ -36,11 +35,18 @@ router.post("/", async (req, res) => {
 });
 
 // post multiple todo
-router.post("/all", async (req, res) => {});
+router.post("/all", async (req, res) => {
+  try {
+    await Todo.insertMany(req.body);
+    res.send(req.body);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
 
 // put todo
 router.put("/:id", async (req, res) => {
-  const id = req.params.id;
   const updatedTodo = req.body;
   await Todo.findByIdAndUpdate(
     { _id: req.params.id },
@@ -52,6 +58,8 @@ router.put("/:id", async (req, res) => {
   res.send(updatedTodo);
 });
 // delete todo
-router.delete("/:id", async (req, res) => {});
+router.delete("/:id", async (req, res) => {
+  await Todo.findByIdAndDelete(req.params.id);
+});
 
 module.exports = router;
